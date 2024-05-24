@@ -1,29 +1,205 @@
-<div.container>
-  <header>
-    <img.logo src="./logo.svg" alt="Marko"/>
-  </header>
-  <main>
-    <p>Edit <code>./src/routes/_index/+page.marko</code> and save to reload.</p>
-    <a href="https://markojs.com/docs/getting-started">
-      Learn Marko
-    </a>
-  </main>
-</div>
-<mouse-mask/>
+class {
+    onCreate() {
+      const targetTime = new Date();
+      targetTime.setHours(targetTime.getHours() + 2);
 
-style {
-  .container {
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: clamp(1em, 2vw, 2em); 
-    padding: 1em;
-    box-sizing: border-box;
-    height:100%;
-    width:100%;
-  }
-  img.logo {
-    width:12em;
-  }
+      this.state = {
+        hours: "02",
+        minutes: "00",
+        seconds: "00"
+      };
+
+      this.updateTime = () => {
+        const now = new Date();
+        const timeDifference = targetTime - now;
+
+        if (timeDifference <= 0) {
+          clearInterval(this.timer);
+          this.state = {
+            hours: "00",
+            minutes: "00",
+            seconds: "00"
+          };
+          return;
+        }
+
+        const hours = String(Math.floor(timeDifference / (1000 * 60 * 60))).padStart(2, '0');
+        const minutes = String(Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+        const seconds = String(Math.floor((timeDifference % (1000 * 60)) / 1000)).padStart(2, '0');
+
+        this.state = { hours, minutes, seconds };
+      };
+
+      this.timer = setInterval(this.updateTime, 1000);
+    }
+    onDestroy() {
+      clearInterval(this.timer);
+    }
 }
+
+<style>
+  .header {
+    background-color: #001f3f;
+    color: white;
+    padding: 2rem 1rem;
+  }
+  .header-logo {
+    max-width: 50px;
+    margin-bottom: 1rem;
+  }
+  .timer {
+    color: #00aaff;
+    font-size: 1.5rem;
+    margin-left: 5rem;
+    margin-bottom: 2rem;
+  }
+  .header-title {
+    font-size: 2rem;
+    margin-left: 5rem;
+  }
+  .header-subtitle {
+    font-size: 1.5rem;
+    color: #00aaff;
+    margin-left: 5rem;
+  }
+  .main-section {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 2rem;
+    background-color: #f5f5f5;
+  }
+  .info-section, .form-section {
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 5px;
+    flex-basis: calc(50vw - 1rem);
+    flex-shrink: 1;
+  }
+  .form-section {
+    background-color: #0d1940;
+    padding: 1.6rem 2rem;
+    color: white;
+    margin-left: 2rem;
+  }
+  .info-section h3 {
+    color: #001f3f;
+  }
+  .form-section input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  .form-section button {
+    width: 10rem;
+    padding: 0.5rem;
+    background-color: #ff4136;
+    color: black;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 0 auto;
+  }
+
+  input {
+    width: 10rem !important;
+    margin-right: 1rem;
+  }
+
+  .info-section-top {
+    padding: 1.3rem;
+    background-color: #0133a0;
+  }
+
+  .checkbox-container {
+    display: flex;
+  }
+
+  .checkbox-container input {
+    width: 1.2rem !important;
+  }
+
+  @media (max-width: 550px) {
+    .main-section {
+      flex-direction: column;
+      align-items: center;
+    }
+    .info-section, .form-section {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  }
+</style>
+
+$ const list = [
+  {
+    title: '1111',
+    subTitle: 'subTitle111',
+  },
+    {
+    title: '2222',
+    subTitle: 'subTitle222'
+  },
+  {
+    title: '3333',
+    subTitle: 'subTitle333'
+  },
+];
+
+$ state = {
+  hours: "02",
+  minutes: "00",
+  seconds: "00"
+};
+
+
+<div>
+  <div class="header">
+    <div class="timer">
+      ${state.hours}:${state.minutes}:${state.seconds}
+    </div>
+    <div class="header-title">Allstate Extended Vehicle Care</div>
+    <div class="header-subtitle">Protection that extends beyond your warranty</div>
+  </div>
+  <div class="main-section">
+    <div class="info-section">
+      <div class="info-section-top">
+        <h3 style="color: #6ebade">Allstate Extended Vehicle Care</h3>
+        <p style="color: white">For as little as $19/mo, we'll pay for repairs after your manufacturer's warranty expires.</p>
+      </div>
+      <div style="padding: 0 1rem">
+        <for|item, index| of=list>
+          <div style="display: flex; align-items: center; margin-top: 2.5rem; margin-bottom: 1.5rem">
+            <div style="margin-right: 1rem">${ index + 1 }</div>
+            <div>
+              <div style="font-weight: bolder; margin-bottom: 0.5rem">${item.title}</div>
+              <div>${item.subTitle}</div>
+            </div>
+          </div>
+        </for>
+      </div>
+    </div>
+    <div class="form-section">
+      <div style="margin-left: 2rem">
+        <h3>Get a Free Quote</h3>
+        <input type="text" placeholder="First Name" />
+        <input type="text" placeholder="Last Name" />
+        <input type="email" placeholder="Email address" />
+        <div class="checkbox-container">
+          <input type="checkbox" id="vehicle-year" />
+          <label for="vehicle-year">My vehicle's model year is 2017 or newer</label>
+        </div>
+        <div class="checkbox-container">
+          <input type="checkbox" id="vehicle-miles" />
+          <label for="vehicle-miles">My vehicle has less than 80,000 miles</label>
+        </div>
+        <div class="checkbox-container">
+          <input type="checkbox" id="location" />
+          <label for="location">I do not live in either California or Massachusetts</label>
+        </div>
+        <button>Learn More</button>
+      </div>
+    </div>
+  </div>
+</div>
+
